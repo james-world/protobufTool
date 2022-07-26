@@ -26,6 +26,15 @@ using (var file = File.Create("message.bin"))
 	Serializer.Serialize(file, message);
 };
 
+using (var file = File.Create("message.txt"))
+{
+    var ms = new MemoryStream();
+    Serializer.Serialize(ms, message);
+    var b64 = Convert.ToBase64String(ms.ToArray());
+    using var sw = new StreamWriter(file);
+    sw.Write(b64);
+}
+
 
 [ProtoContract]
 public class ScheduleInstructionStep3V2

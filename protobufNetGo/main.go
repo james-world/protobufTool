@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/base64"
 	"io/ioutil"
 	"log"
 	pb "protobufNetGo/imburse_protobuf"
@@ -59,9 +60,9 @@ func main() {
 		RequestedSettlementDate:     convertDateToCSDateTime(time.Date(2023, time.August, 1, 0, 0, 0, 0, time.UTC)),
 		ForecastedSettlementDate:    convertDateToCSDateTime(time.Date(2023, time.August, 3, 0, 0, 0, 0, time.UTC)),
 		ScheduledExecutionTimestamp: convertDateToCSDateTime(time.Date(2023, time.July, 28, 0, 0, 0, 0, time.UTC)),
-		AppId:         "MyAppId",
-		AppQueue:      "Braintree",
-		PaymentMethod: "CreditCard",
+		AppId:                       "MyAppId",
+		AppQueue:                    "Braintree",
+		PaymentMethod:               "CreditCard",
 	}
 
 	out, err := proto.Marshal(msg)
@@ -70,6 +71,10 @@ func main() {
 	}
 	if err := ioutil.WriteFile("message_go.bin", out, 0644); err != nil {
 		log.Fatalln("Failed to write file:", err)
+	}
+	b64 := base64.StdEncoding.EncodeToString(out)
+	if err := ioutil.WriteFile("message_go.txt", []byte(b64), 0644); err != nil {
+		log.Fatalln("Failed to write base64 file:", err)
 	}
 
 }
